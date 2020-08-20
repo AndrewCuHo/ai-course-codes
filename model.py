@@ -65,3 +65,44 @@ class AlexNet(nn.Module):
         x = self.classifier(x)
         return x
 
+#CNN + LSTM
+class CRNN(nn.Module):
+
+    def __init__(self, num_classes=2):
+        super(CRNN, self).__init__()
+        self.features = nn.Sequential(
+            nn.Conv1d(1, 64, kernel_size=2, stride=2),
+            nn.BatchNorm1d(64, affine=False),
+            nn.LeakyReLU(inplace=True),
+            nn.MaxPool1d(kernel_size=2, stride=2, padding=0),
+            nn.Dropout(p=0.5),
+            nn.Conv1d(64, 128, kernel_size=1),
+            nn.BatchNorm1d(128, affine=False),
+            nn.LeakyReLU(inplace=True),
+            nn.Conv1d(128, 192, kernel_size=1),
+            nn.BatchNorm1d(192, affine=False),
+            nn.LeakyReLU(inplace=True),
+            nn.Conv1d(192, 384, kernel_size=1),
+            nn.BatchNorm1d(384, affine=False),
+            nn.LeakyReLU(inplace=True),
+            nn.MaxPool1d(kernel_size=2, stride=1, padding=0),
+        )
+        self.rnn = nn.LSTM(input_size=1, hidden_size=hidden_size, dropout=0.5, num_layers=hidden_num_layers)
+        self.classifier = nn.Sequential(
+            nn.Dropout(),
+            nn.BatchNorm1d(8064),
+            nn.LeakyReLU(inplace=True),
+            nn.BatchNorm1d(8064),
+            nn.LeakyReLU(inplace=True),
+            nn.Linear(8064, num_classes),
+            # w [84, 21]
+        )
+
+    def forward(self, x, hidden=None):
+        x = self.features(x)
+        x, hidden = self.rnn(x, hidden)
+        #print(hidden[0].shape)
+        #hidden[3,200,21]
+        x = torch.flatten(x, 1)
+        x = self.classifier(x)
+        return x, hidden
