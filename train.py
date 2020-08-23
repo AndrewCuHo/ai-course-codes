@@ -19,7 +19,6 @@ from Param_counter import get_model_complexity_info
 Test the process of data by using Attention-CNN method
 author: 112020333002191
 date: 20/8/19
-reference: https://github.com/AndrewCuHo/
 '''
 #
 RESUME = True
