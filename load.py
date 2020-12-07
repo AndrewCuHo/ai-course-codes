@@ -8,7 +8,6 @@ from mne.io import read_raw_edf
 from scipy.signal import welch
 
 '''
-data: https://physionet.org/content/sleep-edfx/1.0.0/
 EOG:100HZ, EEF:100HZ, EMG:1HZ
 delta (0.5–4 Hz), theta (4–8 Hz), alpha (8–12 Hz), beta (12–30 Hz), and gamma (30–100 Hz)
 author: 112020333002191
@@ -33,7 +32,7 @@ label_list = []
 path_list = []
 sf = 100
 time_interval = 1200 * sf
-base_path = 'F:/EEG_data/SLEEP_EDF/sleep-edf-database-expanded-1.0.0/sleep-edf-database-expanded-1.0.0/'
+base_path = ''
 eeg_info_df = pd.read_csv('./eeg_info_df.csv')
 frequency_bands = {'Beta': [12, 30],
                    'Alpha': [8, 12],
